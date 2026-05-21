@@ -140,7 +140,7 @@ Tahap ini bertujuan untuk membandingkan hasil validitas dan reliabilitas antara 
 
 ### Perbandingan Validitas
 
-Pada tahap ini dilakukan perbandingan jumlah item yang valid antara 10 data pertama dan seluruh data responden.
+Pada tahap ini dilakukan perbandingan jumlah item yang valid antara 10 data dan seluruh data responden.
 
 ```r
 # Jumlah item valid seluruh data
