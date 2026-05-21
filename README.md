@@ -12,6 +12,10 @@ FMIPA Universitas Mataram sebagai salah satu fakultas dengan jumlah mahasiswa ya
 ## Tujuan
 Tujuan dari penelitian ini adalah:
 - Mengetahui tingkat kepuasan mahasiswa terhadap pelayanan administrasi akademik di FMIPA Universitas Mataram melalui survei online.
+- Menentukan jumlah sampel penelitian menggunakan metode Slovin.
+- Menguji validitas instrumen penelitian.
+- Menguji reliabilitas instrumen penelitian.
+- Membandingkan hasil validitas dan reliabilitas antara 10 data responden dan seluruh data responden.
 - Mengetahui distribusi responden.
 - Menghitung hasil naive estimation terhadap tingkat kepuasan mahasiswa.
 - Melakukan weighting sederhana berdasarkan jenis kelamin untuk memperoleh hasil estimasi yang lebih representatif.
@@ -36,7 +40,164 @@ data <- read_excel("C:/Users/asus/Downloads/Hasil Survei.xlsx")
 
 ---
 
-### 2. Analisis Deskriptif 
+## 2. Perhitungan Sampel Menggunakan Metode Slovin
+
+Pada tahap ini dilakukan perhitungan jumlah sampel minimum menggunakan metode Slovin. Metode ini digunakan untuk menentukan jumlah sampel berdasarkan jumlah populasi dan margin of error yang digunakan dalam penelitian.
+
+```r
+N <- 1693
+e <- 0.18
+
+n <- N / (1 + N * (e^2))
+
+ceiling(n)
+```
+
+Keterangan:
+- `N` : jumlah populasi
+- `e` : margin of error
+- `ceiling()` : membulatkan hasil ke atas
+
+---
+
+## 3. Uji Validitas dan Reliabilitas Seluruh Data
+
+Tahap ini bertujuan untuk menguji validitas dan reliabilitas instrumen menggunakan seluruh data responden.
+
+Package `psych` digunakan untuk menghitung nilai validitas dan reliabilitas menggunakan metode Cronbach Alpha.
+
+### Mengambil Item Pertanyaan
+
+```r
+library(psych)
+library(dplyr)
+
+item <- data[, 6:15]
+
+item <- na.omit(item)
+```
+
+Syntax di atas digunakan untuk mengambil kolom pertanyaan kuesioner dan menghapus data kosong (`NA`).
+
+### Uji Validitas dan Reliabilitas
+
+```r
+hasil <- alpha(item)
+
+validitas <- hasil$item.stats
+
+validitas$status <- ifelse(validitas$r.drop > 0.3,
+                           "Valid",
+                           "Tidak Valid")
+
+validitas[, c("r.drop", "status")]
+
+hasil$total
+```
+
+Keterangan:
+- `alpha()` digunakan untuk menghitung validitas dan reliabilitas
+- `r.drop` digunakan untuk melihat validitas item
+- Item dinyatakan valid jika `r.drop > 0.3`
+- `hasil$total` digunakan untuk menampilkan nilai Cronbach Alpha
+- Instrumen dinyatakan reliabel jika nilai Cronbach Alpha > 0.7
+
+---
+
+## 4. Uji Validitas dan Reliabilitas 10 Data 
+
+Pada tahap ini dilakukan pengujian menggunakan 10 data responden untuk membandingkan hasil dengan seluruh data responden.
+
+```r
+item_10 <- item[1:10, ]
+
+hasil_10 <- alpha(item_10)
+
+validitas_10 <- hasil_10$item.stats
+
+validitas_10$status <- ifelse(validitas_10$r.drop > 0.3,
+                              "Valid",
+                              "Tidak Valid")
+
+validitas_10[, c("r.drop", "status")]
+
+hasil_10$total
+```
+
+Keterangan:
+- `item[1:10, ]` digunakan untuk mengambil 10 responden pertama
+- `alpha()` digunakan untuk menghitung validitas dan reliabilitas
+- `r.drop` digunakan untuk melihat validitas item
+- Item dinyatakan valid jika `r.drop > 0.3`
+- `hasil_10$total` digunakan untuk menampilkan nilai Cronbach Alpha
+- Instrumen dinyatakan reliabel jika nilai Cronbach Alpha > 0.7
+
+---
+
+## 5. Perbandingan Validitas dan Reliabilitas
+
+Tahap ini bertujuan untuk membandingkan hasil validitas dan reliabilitas antara 10 data responden dan seluruh data responden.
+
+### Perbandingan Validitas
+
+Pada tahap ini dilakukan perbandingan jumlah item yang valid antara 10 data pertama dan seluruh data responden.
+
+```r
+# Jumlah item valid seluruh data
+
+valid_full <- sum(validitas$r.drop > 0.3)
+
+# Jumlah item valid 10 data
+
+valid_10 <- sum(validitas_10$r.drop > 0.3)
+
+# Tabel perbandingan validitas
+
+perbandingan_validitas <- data.frame(
+  Data = c("10 Data", "Seluruh Data"),
+  Jumlah_Item_Valid = c(valid_10, valid_full)
+)
+
+print(perbandingan_validitas)
+```
+
+Keterangan:
+- `sum()` digunakan untuk menghitung jumlah item valid
+- Item dinyatakan valid jika `r.drop > 0.3`
+- `data.frame()` digunakan untuk membuat tabel perbandingan validitas
+
+---
+
+### Perbandingan Reliabilitas
+
+Pada tahap ini dilakukan perbandingan nilai reliabilitas antara 10 data dan seluruh data responden menggunakan Cronbach Alpha.
+
+```r
+# Ambil item valid dari 10 data
+
+item_valid_10 <- rownames(validitas_10[validitas_10$r.drop > 0.3, ])
+
+item_baru_10 <- item_10[, item_valid_10]
+
+# Tabel perbandingan reliabilitas
+
+perbandingan_reliabilitas <- data.frame(
+  Data = c("10 Data Setelah Hapus", "Seluruh Data"),
+  Cronbach_Alpha = c(
+    alpha(item_baru_10)$total$raw_alpha,
+    hasil$total$raw_alpha
+  )
+)
+
+print(perbandingan_reliabilitas)
+```
+
+Keterangan:
+- Item tidak valid pada 10 data dihapus terlebih dahulu
+- `raw_alpha` menunjukkan nilai Cronbach Alpha
+- `data.frame()` digunakan untuk membuat tabel perbandingan reliabilitas
+
+### 6. Analisis Deskriptif 
 Analisis ini dilakukan untuk mengetahui distribusi responden berdasarkan jenis kelamin. Fungsi `table()` digunakan untuk menghitung jumlah responden pada setiap kategori, sedangkan `prop.table()` digunakan untuk menghitung persentasenya.
 
 ```r
@@ -55,7 +216,7 @@ prop.table(table(data$`Program studi`))*100
 
 ---
 
-### 3. Tabel Distribusi Frekuensi dan Persentase
+### 7. Tabel Distribusi Frekuensi dan Persentase
 Tahap ini bertujuan untuk menyajikan data dalam bentuk tabel yang lebih rapi agar mudah dibaca dan diinterpretasikan.
 
 ```r
@@ -99,7 +260,7 @@ tabel_umur
 
 ---
 
-### 4. Grafik Distribusi Responden
+### 8. Grafik Distribusi Responden
 Grafik pie digunakan untuk memvisualisasikan distribusi responden berdasarkan jenis kelamin sehingga lebih mudah dipahami secara visual.
 
 ```r
@@ -132,7 +293,7 @@ barplot(
 
 ---
 
-### 5. Naive Estimation Tingkat Kepuasan
+### 9. Naive Estimation Tingkat Kepuasan
 Naive estimation digunakan untuk memperoleh estimasi awal tingkat kepuasan mahasiswa. Responden dianggap puas jika memberikan nilai ≥ 4 (skala Likert). Nilai proporsi dihitung dengan membagi jumlah responden yang puas dengan total responden.
 
 ```r
@@ -150,7 +311,7 @@ p * 100
 
 ---
 
-### 6. Weighting Sederhana Berdasarkan Jenis Kelamin
+### 10. Weighting Sederhana Berdasarkan Jenis Kelamin
 Weighting dilakukan untuk mengurangi bias akibat ketidakseimbangan sampel. Bobot dihitung berdasarkan perbandingan antara proporsi populasi dan proporsi sampel.
 
 ```r
@@ -187,7 +348,7 @@ weighted_estimation * 100
 
 ---
 
-### 7. Perbandingan Naive dan Weighted Estimation
+### 11. Perbandingan Naive dan Weighted Estimation
 Tahap ini bertujuan untuk membandingkan hasil estimasi sebelum dan sesudah dilakukan pembobotan menggunakan grafik batang.
 
 ```r
@@ -204,6 +365,49 @@ barplot(
 ```
 
 ## Hasil dan Pembahasan
+
+### Hasil Perhitungan Sampel Menggunakan Metode Slovin
+
+Berdasarkan hasil perhitungan menggunakan metode Slovin dengan jumlah populasi sebanyak `1693` mahasiswa dan margin of error sebesar `18%`, diperoleh jumlah sampel sebesar `30,31` sehingga dibulatkan menjadi `31` responden.
+
+## Hasil Uji Validitas dan Reliabilitas Seluruh Data
+
+Berdasarkan hasil uji validitas menggunakan Corrected Item-Total Correlation (`r.drop`), seluruh item pertanyaan memiliki nilai `r.drop > 0,3` sehingga seluruh item dinyatakan valid. Nilai `r.drop` tertinggi terdapat pada item *“Secara keseluruhan, saya puas terhadap pelayanan administrasi akademik FMIPA Universitas Mataram”* sebesar `0,8226397`, sedangkan nilai terendah terdapat pada item *“Pelayanan administrasi mudah diakses mahasiswa”* sebesar `0,5246258`. Hasil ini menunjukkan bahwa seluruh item pertanyaan mampu mengukur tingkat kepuasan mahasiswa dengan baik.
+
+Hasil uji reliabilitas menggunakan Cronbach Alpha memperoleh nilai `0,9144309`. Karena nilai Cronbach Alpha lebih besar dari `0,7`, maka instrumen penelitian dinyatakan reliabel dan memiliki tingkat konsistensi yang sangat baik.
+
+---
+
+### Hasil Uji Validitas dan Reliabilitas 10 Data Pertama
+
+Berdasarkan hasil uji validitas menggunakan 10 data pertama responden, terdapat 9 item yang dinyatakan valid karena memiliki nilai `r.drop > 0,3`. Namun, terdapat 1 item yang tidak valid yaitu item *“Pelayanan administrasi mudah diakses mahasiswa”* dengan nilai `r.drop` sebesar `0,1248612`. Hal ini menunjukkan bahwa item tersebut memiliki hubungan yang rendah terhadap total skor pada 10 data pertama responden.
+
+Hasil uji reliabilitas menggunakan Cronbach Alpha pada 10 data pertama memperoleh nilai sebesar `0,9096981`. Karena nilai Cronbach Alpha lebih besar dari `0,7`, maka instrumen penelitian tetap dinyatakan reliabel dan memiliki tingkat konsistensi yang baik.
+
+Setelah item yang tidak valid dihapus, nilai Cronbach Alpha meningkat menjadi `0,9295424`. Hal ini menunjukkan bahwa penghapusan item tidak valid dapat meningkatkan tingkat konsistensi instrumen penelitian.
+
+### Perbandingan Validitas dan Reliabilitas
+
+
+Hasil perbandingan validitas menunjukkan bahwa seluruh data memiliki jumlah item valid yang lebih banyak dibandingkan 10 data pertama responden.
+
+| Data | Jumlah Item Valid |
+|---|---|
+| 10 Data | 9 |
+| Seluruh Data | 10 |
+
+Berdasarkan hasil perbandingan validitas, pada 10 data pertama terdapat 9 item yang valid, sedangkan pada seluruh data responden terdapat 10 item yang valid. Hal ini menunjukkan bahwa penggunaan seluruh data responden menghasilkan pengujian validitas yang lebih baik dan lebih representatif dibandingkan hanya menggunakan 10 data pertama responden. Semakin banyak jumlah responden yang digunakan, maka hubungan antar item menjadi lebih stabil sehingga hasil validitas yang diperoleh lebih akurat.
+
+---
+
+Hasil perbandingan reliabilitas menunjukkan bahwa nilai Cronbach Alpha pada 10 data setelah penghapusan item tidak valid lebih besar dibandingkan seluruh data responden.
+
+| Data | Cronbach Alpha |
+|---|---|
+| 10 Data Setelah Hapus | 0.9295424 |
+| Seluruh Data | 0.9144309 |
+
+Berdasarkan hasil perbandingan reliabilitas, nilai Cronbach Alpha pada 10 data setelah penghapusan item tidak valid lebih tinggi dibandingkan seluruh data responden. Hal ini dapat terjadi karena jawaban pada 10 data pertama cenderung lebih homogen dan konsisten sehingga menghasilkan nilai reliabilitas yang lebih besar. Sementara itu, pada seluruh data responden terdapat variasi jawaban yang lebih beragam sehingga nilai Cronbach Alpha sedikit menurun. Meskipun demikian, hasil reliabilitas menggunakan seluruh data responden lebih representatif karena melibatkan jumlah responden yang lebih banyak dan lebih mampu menggambarkan kondisi populasi sebenarnya.
 
 ### Analisis Deskriptif
 Analisis deskriptif dilakukan untuk mengetahui gambaran karakteristik responden yang berpartisipasi dalam survei online. Karakteristik responden yang dianalisis dalam penelitian ini adalah berdasarkan jenis kelamin, program studi dan umur.
