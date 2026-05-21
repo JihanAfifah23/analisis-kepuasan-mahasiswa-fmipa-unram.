@@ -1,4 +1,4 @@
-# analisis-kepuasan-mahasiswa-fmipa-unram.
+# analisis-kepuasan-mahasiswa-fmipa
 
 # Analisis Tingkat Kepuasan Mahasiswa terhadap Pelayanan Administrasi Akademik di FMIPA Universitas Mataram
 
@@ -35,7 +35,7 @@ Pada tahap ini, data hasil survei yang telah disimpan dalam file Excel diimpor k
 ```r
 library(readxl)
 
-data <- read_excel("C:/Users/asus/Downloads/Hasil Survei.xlsx")
+data <- read_excel("C:/Users/asus/Downloads/Hasil Survei (3).xlsx")
 ```
 
 ---
@@ -378,9 +378,9 @@ Hasil uji reliabilitas menggunakan Cronbach Alpha memperoleh nilai `0,9144309`. 
 
 ---
 
-### Hasil Uji Validitas dan Reliabilitas 10 Data Pertama
+### Hasil Uji Validitas dan Reliabilitas 10 Data 
 
-Berdasarkan hasil uji validitas menggunakan 10 data pertama responden, terdapat 9 item yang dinyatakan valid karena memiliki nilai `r.drop > 0,3`. Namun, terdapat 1 item yang tidak valid yaitu item *“Pelayanan administrasi mudah diakses mahasiswa”* dengan nilai `r.drop` sebesar `0,1248612`. Hal ini menunjukkan bahwa item tersebut memiliki hubungan yang rendah terhadap total skor pada 10 data pertama responden.
+Berdasarkan hasil uji validitas menggunakan 10 data responden, terdapat 9 item yang dinyatakan valid karena memiliki nilai `r.drop > 0,3`. Namun, terdapat 1 item yang tidak valid yaitu item *“Pelayanan administrasi mudah diakses mahasiswa”* dengan nilai `r.drop` sebesar `0,1248612`. Hal ini menunjukkan bahwa item tersebut memiliki hubungan yang rendah terhadap total skor pada 10 data responden.
 
 Hasil uji reliabilitas menggunakan Cronbach Alpha pada 10 data pertama memperoleh nilai sebesar `0,9096981`. Karena nilai Cronbach Alpha lebih besar dari `0,7`, maka instrumen penelitian tetap dinyatakan reliabel dan memiliki tingkat konsistensi yang baik.
 
@@ -389,25 +389,25 @@ Setelah item yang tidak valid dihapus, nilai Cronbach Alpha meningkat menjadi `0
 ### Perbandingan Validitas dan Reliabilitas
 
 
-Hasil perbandingan validitas menunjukkan bahwa seluruh data memiliki jumlah item valid yang lebih banyak dibandingkan 10 data pertama responden.
+Hasil perbandingan validitas.
 
 | Data | Jumlah Item Valid |
 |---|---|
 | 10 Data | 9 |
 | Seluruh Data | 10 |
 
-Berdasarkan hasil perbandingan validitas, pada 10 data pertama terdapat 9 item yang valid, sedangkan pada seluruh data responden terdapat 10 item yang valid. Hal ini menunjukkan bahwa penggunaan seluruh data responden menghasilkan pengujian validitas yang lebih baik dan lebih representatif dibandingkan hanya menggunakan 10 data pertama responden. Semakin banyak jumlah responden yang digunakan, maka hubungan antar item menjadi lebih stabil sehingga hasil validitas yang diperoleh lebih akurat.
+Berdasarkan hasil perbandingan validitas, pada 10 data terdapat 9 item yang valid, sedangkan pada seluruh data responden terdapat 10 item yang valid. Hal ini menunjukkan bahwa penggunaan seluruh data responden menghasilkan pengujian validitas yang lebih baik dan lebih representatif dibandingkan hanya menggunakan 10 data responden. Semakin banyak jumlah responden yang digunakan, maka hubungan antar item menjadi lebih stabil sehingga hasil validitas yang diperoleh lebih akurat.
 
 ---
 
-Hasil perbandingan reliabilitas menunjukkan bahwa nilai Cronbach Alpha pada 10 data setelah penghapusan item tidak valid lebih besar dibandingkan seluruh data responden.
+Hasil perbandingan reliabilitas.
 
 | Data | Cronbach Alpha |
 |---|---|
 | 10 Data Setelah Hapus | 0.9295424 |
 | Seluruh Data | 0.9144309 |
 
-Berdasarkan hasil perbandingan reliabilitas, nilai Cronbach Alpha pada 10 data setelah penghapusan item tidak valid lebih tinggi dibandingkan seluruh data responden. Hal ini dapat terjadi karena jawaban pada 10 data pertama cenderung lebih homogen dan konsisten sehingga menghasilkan nilai reliabilitas yang lebih besar. Sementara itu, pada seluruh data responden terdapat variasi jawaban yang lebih beragam sehingga nilai Cronbach Alpha sedikit menurun. Meskipun demikian, hasil reliabilitas menggunakan seluruh data responden lebih representatif karena melibatkan jumlah responden yang lebih banyak dan lebih mampu menggambarkan kondisi populasi sebenarnya.
+Berdasarkan hasil perbandingan reliabilitas, nilai Cronbach Alpha pada 10 data setelah penghapusan item tidak valid lebih tinggi dibandingkan seluruh data responden. Hal ini dapat terjadi karena jawaban pada 10 data cenderung lebih homogen dan konsisten sehingga menghasilkan nilai reliabilitas yang lebih besar. Sementara itu, pada seluruh data responden terdapat variasi jawaban yang lebih beragam sehingga nilai Cronbach Alpha sedikit menurun. Meskipun demikian, hasil reliabilitas menggunakan seluruh data responden lebih representatif karena melibatkan jumlah responden yang lebih banyak dan lebih mampu menggambarkan kondisi populasi sebenarnya.
 
 ### Analisis Deskriptif
 Analisis deskriptif dilakukan untuk mengetahui gambaran karakteristik responden yang berpartisipasi dalam survei online. Karakteristik responden yang dianalisis dalam penelitian ini adalah berdasarkan jenis kelamin, program studi dan umur.
